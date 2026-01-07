@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>baken92 — digitaal visitekaartje</title>
+
+  <style>
+    :root{
+      --blue:#0b4f9c;
+      --text:#0f172a;
+      --muted:#5b677a;
+      --card:#ffffff;
+      --bg:#f6f9ff;
+      --shadow: 0 18px 45px rgba(2, 32, 71, .18);
+      --radius: 26px;
+      --maxw: 420px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(1200px 600px at 30% -10%, #e7f1ff 0%, var(--bg) 55%, #f7fbff 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      padding:22px;
+    }
+
+    .wrap{ width:min(var(--maxw), 100%); position:relative; }
+
+    .card{
+      position:relative;
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      padding:18px 18px 220px; /* ruimte voor zee */
+    }
+
+    /* Header */
+    .top{ display:flex; align-items:center; gap:12px; padding-bottom:10px; }
+    .brand img{ height:38px; width:auto; display:block; }
+
+    /* Profielfoto */
+    .profile{ display:flex; justify-content:center; padding:10px 0 4px; }
+.avatar{
+  width:185px;          /* was 150 */
+  height:185px;
+  border-radius:50%;
+  overflow:hidden;
+  border:6px solid #fff;
+  box-shadow:0 12px 28px rgba(2,32,71,.20);
+  background:#eaf2ff;
+}
+
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* Naam + titel */
+    .name{
+      text-align:center;
+      margin-top:10px;
+      color:var(--blue);
+      font-weight:800;
+      font-size:22px;
+      line-height:1.15;
+    }
+    .role{
+      text-align:center;
+      margin-top:4px;
+      font-weight:700;
+      color:#23324a;
+    }
+    .tagline{
+      text-align:center;
+      margin-top:2px;
+      color:var(--muted);
+      font-weight:600;
+      font-size:13px;
+    }
+
+    /* Contact lijst */
+    .list{
+      margin:16px auto 0;
+      max-width:340px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .row{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      padding:8px 10px;
+      border-radius:14px;
+      background:#f4f8ff;
+      border:1px solid rgba(11,79,156,.10);
+    }
+    .ico{
+      width:22px;
+      height:22px;
+      flex:0 0 22px;
+      margin-top:1px;
+      opacity:.95;
+    }
+    .row a{
+      color:#12335f;
+      text-decoration:none;
+      font-weight:700;
+      line-height:1.25;
+      word-break:break-word;
+    }
+    .row a:hover{ text-decoration:underline; }
+
+    /* QR + knop */
+    .bottom-actions{
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      position:relative;
+      z-index:5; /* boven zee */
+    }
+    #qrcode{
+      width:152px;
+      height:152px;
+      padding:10px;
+      background:#fff;
+      border-radius:16px;
+      border:1px solid rgba(11,79,156,.12);
+      box-shadow:0 10px 25px rgba(2,32,71,.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn{
+  width:min(320px, 100%);
+  border:0;
+  cursor:pointer;
+  padding:14px 18px;
+  border-radius:999px;
+
+  /* NIEUWE KLEUR */
+  background: linear-gradient(
+    180deg,
+    #00356b 0%,
+    #002751 100%
+  );
+
+  color:#fff;
+  font-weight:900;
+  letter-spacing:.2px;
+
+  box-shadow:
+    0 10px 22px rgba(0, 39, 81, .35),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  transition: transform .12s ease, filter .12s ease;
+}
+
+.btn:hover{
+  filter: brightness(1.06);
+}
+
+.btn:active{
+  transform: translateY(1px) scale(.99);
+}
+
+
+    /* ====== SEA / WAVES ====== */
+    .sea{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:-10px;          /* nooit wit onderaan */
+      height:240px;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:1;
+      background: transparent;  /* JOUW WENS: geen blauw vlak */
+    }
+
+    /* ✅ Onderlaag: alleen onderaan (geen "vak"), lost witte transparantie-gaten op */
+.sea::before{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  bottom:-30px;
+
+  /* klein houden zodat je nooit waas ziet */
+  height:110px;
+
+  /* vaste waterkleur (geen fade naar boven) */
+  background-color: white;
+
+  /* harde cutoff bovenaan: volledig zichtbaar tot 82%, dan abrupt 0 */
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 82%, transparent 82%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 0%, #000 82%, transparent 82%, transparent 100%);
+
+  z-index:0;
+  pointer-events:none;
+}
+
+
+
+    .wave-img{
+      position:absolute;
+      left:50%;
+      width:140%;
+      height:auto;
+      transform: translate3d(-50%, 0, 0);
+      will-change: transform;
+      backface-visibility:hidden;
+      transform-style:preserve-3d;
+      z-index:1;
+      filter:none;
+    }
+
+    /* Animaties */
+    @keyframes bobA {
+      0%   { transform: translate3d(-50%, 0px, 0); }
+      50%  { transform: translate3d(-50%, -10px, 0); }
+      100% { transform: translate3d(-50%, 0px, 0); }
+    }
+    @keyframes bobB {
+      0%   { transform: translate3d(-50%, 0px, 0); }
+      50%  { transform: translate3d(-50%, -6px, 0); }
+      100% { transform: translate3d(-50%, 0px, 0); }
+    }
+    @keyframes bobC {
+      0%   { transform: translate3d(-50%, 0px, 0); }
+      50%  { transform: translate3d(-50%, -14px, 0); }
+      100% { transform: translate3d(-50%, 0px, 0); }
+    }
+
+    /* Overlap zoals je “goede” foto */
+    .w1{ bottom:  6px;  opacity:.55; animation: bobB 6.0s ease-in-out infinite; animation-delay:-2.0s; } /* achter */
+    .w2{ bottom:-6px;  opacity:.65; animation: bobA 5.4s ease-in-out infinite; animation-delay:-1.5s; }
+    .w3{ bottom:-20px; opacity:.75; animation: bobB 4.7s ease-in-out infinite; animation-delay:-1.0s; }
+    .w4{ bottom:-36px; opacity:.88; animation: bobA 4.0s ease-in-out infinite; animation-delay:-.5s; }
+    .w5{ bottom:-54px; opacity:1.0; animation: bobC 3.6s ease-in-out infinite; } /* voor */
+
+    /* ====== Vuurtoren (huidige goede versie) ====== */
+    .lighthouse{
+      position:absolute;
+      left:-58px;
+      bottom:-46px;
+      width:205px;
+      z-index:6; /* voor golven */
+      transform-origin: 45% 90%;
+      animation: lighthouseBob 3.4s ease-in-out infinite;
+      filter: drop-shadow(0 18px 28px rgba(2,32,71,.30));
+      will-change: transform;
+      backface-visibility:hidden;
+    }
+    @keyframes lighthouseBob{
+      0%   { transform: translateY(0px) rotate(-1.2deg); }
+      35%  { transform: translateY(7px) rotate(1.9deg); }
+      70%  { transform: translateY(2px) rotate(-0.7deg); }
+      100% { transform: translateY(0px) rotate(-1.2deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .wave-img, .lighthouse{ animation:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div class="brand">
+          <img src="logo.png" alt="baken92 logo">
+        </div>
+      </div>
+
+      <div class="profile">
+        <div class="avatar">
+          <img src="profielfoto.png" alt="Profielfoto">
+        </div>
+      </div>
+
+      <div class="name">Geert Van der Wildt</div>
+      <div class="role">Verzekeringsagent</div>
+      <div class="tagline">Expert ondernemen en schade</div>
+
+      <div class="list">
+        <div class="row">
+          <img class="ico" src="mail.png" alt="">
+          <div><a href="mailto:geert.van.der.wildt@verz.kbc.be">geert.van.der.wildt@verz.kbc.be</a></div>
+        </div>
+        <div class="row">
+          <img class="ico" src="telefoon.png" alt="">
+          <div><a href="tel:+3252397212">052 39 72 12</a></div>
+        </div>
+        <div class="row">
+          <img class="ico" src="locatie.png" alt="">
+          <div>
+            <a target="_blank" rel="noopener" href="https://www.google.com/maps?q=Kerkstraat%2058%20b1%209255%20Buggenhout">
+              Kerkstraat 58 b1<br>9255 Buggenhout
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <img class="ico" src="website.png" alt="">
+          <div><a target="_blank" rel="noopener" href="https://baken92.be/">https://baken92.be/</a></div>
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        <div id="qrcode" aria-label="QR code naar website"></div>
+        <button class="btn" id="saveContact">contact opslaan</button>
+      </div>
+
+      <div class="sea" aria-hidden="true">
+        <img class="lighthouse" src="vuurtoren.png" alt="">
+        <img class="wave-img w1" src="golf5.png" alt="">
+        <img class="wave-img w2" src="golf4.png" alt="">
+        <img class="wave-img w3" src="golf3.png" alt="">
+        <img class="wave-img w4" src="golf2.png" alt="">
+        <img class="wave-img w5" src="golf1.png" alt="">
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    const CONTACT = {
+      firstName: "Geert",
+      lastName: "Van der Wildt",
+      org: "baken92 Verzekeringen",
+      title: "Verzekeringsagent",
+      phone: "+32 52 39 72 12",
+      email: "geert.van.der.wildt@verz.kbc.be",
+      website: "https://baken92.be/",
+      addressLabel: "Kerkstraat 58 b1, 9255 Buggenhout, België"
+    };
+
+    new QRCode(document.getElementById("qrcode"), {
+      text: CONTACT.website,
+      width: 132,
+      height: 132,
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    function makeVCard(c){
+      const lines = [
+        "BEGIN:VCARD","VERSION:3.0",
+        `N:${c.lastName};${c.firstName};;;`,
+        `FN:${c.firstName} ${c.lastName}`,
+        c.org ? `ORG:${c.org}` : "",
+        c.title ? `TITLE:${c.title}` : "",
+        c.phone ? `TEL;TYPE=WORK,VOICE:${c.phone}` : "",
+        c.email ? `EMAIL;TYPE=INTERNET,WORK:${c.email}` : "",
+        c.website ? `URL:${c.website}` : "",
+        c.addressLabel ? `ADR;TYPE=WORK:;;${c.addressLabel};;;;` : "",
+        "END:VCARD"
+      ].filter(Boolean);
+      return lines.join("\r\n");
+    }
+
+    document.getElementById("saveContact").addEventListener("click", () => {
+      const vcf = makeVCard(CONTACT);
+      const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${CONTACT.firstName}_${CONTACT.lastName}.vcf`.replace(/\s+/g, "_");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
