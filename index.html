@@ -7,14 +7,20 @@
 
   <style>
     :root{
+      --navy:#002751;
       --blue:#0b4f9c;
       --text:#0f172a;
       --muted:#5b677a;
+
       --card:#ffffff;
       --bg:#f6f9ff;
+
       --shadow: 0 18px 45px rgba(2, 32, 71, .18);
       --radius: 26px;
       --maxw: 420px;
+
+      --tile:#f7f9ff;
+      --tileBorder: rgba(0,39,81,.12);
     }
 
     *{ box-sizing:border-box; }
@@ -30,7 +36,7 @@
       padding:22px;
     }
 
-    .wrap{ width:min(var(--maxw), 100%); position:relative; }
+    .wrap{ width:min(var(--maxw), 100%); }
 
     .card{
       position:relative;
@@ -38,101 +44,191 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       overflow:hidden;
-      padding:18px 18px 220px; /* ruimte voor zee */
+      padding:18px 18px 260px; /* ruimte voor zee */
     }
 
-    /* Header */
-    .top{ display:flex; align-items:center; gap:12px; padding-bottom:10px; }
-    .brand img{ height:38px; width:auto; display:block; }
-
-    /* Profielfoto */
-    .profile{ display:flex; justify-content:center; padding:10px 0 4px; }
-.avatar{
-  width:185px;          /* was 150 */
-  height:185px;
-  border-radius:50%;
-  overflow:hidden;
-  border:6px solid #fff;
-  box-shadow:0 12px 28px rgba(2,32,71,.20);
-  background:#eaf2ff;
-}
-
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
+    /* Top bar logo (enkel baken92) */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      padding-bottom:10px;
     }
+    .brand-left img{ height:38px; width:auto; display:block; }
 
-    /* Naam + titel */
+    /* Profile */
+    .profile{
+      display:flex;
+      justify-content:center;
+      padding:10px 0 6px;
+    }
+    .avatar{
+      width:170px;
+      height:170px;
+      border-radius:999px;
+      overflow:hidden;
+      border:6px solid #fff;
+      box-shadow:0 12px 28px rgba(2,32,71,.20);
+      background:#eaf2ff;
+    }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+
     .name{
       text-align:center;
       margin-top:10px;
       color:var(--blue);
-      font-weight:800;
+      font-weight:850;
       font-size:22px;
       line-height:1.15;
+      letter-spacing:.2px;
     }
     .role{
       text-align:center;
       margin-top:4px;
-      font-weight:700;
+      font-weight:750;
       color:#23324a;
     }
     .tagline{
       text-align:center;
       margin-top:2px;
       color:var(--muted);
-      font-weight:600;
+      font-weight:650;
       font-size:13px;
     }
 
-    /* Contact lijst */
-    .list{
-      margin:16px auto 0;
-      max-width:340px;
+    /* ===== Strakke info-kaarten ===== */
+    .tiles{
+      margin:18px auto 0;
+      max-width:360px;
       display:flex;
       flex-direction:column;
-      gap:10px;
-    }
-    .row{
-      display:flex;
-      align-items:flex-start;
       gap:12px;
-      padding:8px 10px;
-      border-radius:14px;
-      background:#f4f8ff;
-      border:1px solid rgba(11,79,156,.10);
     }
-    .ico{
-      width:22px;
-      height:22px;
-      flex:0 0 22px;
-      margin-top:1px;
+    .tile{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 12px;
+      border-radius:14px;
+      background:var(--tile);
+      border:1px solid var(--tileBorder);
+      box-shadow:0 10px 22px rgba(2,32,71,.06);
+      text-decoration:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .tile:hover{
+      transform: translateY(-1px);
+      box-shadow:0 14px 28px rgba(2,32,71,.08);
+      border-color: rgba(0,39,81,.18);
+    }
+    .tile:active{ transform: translateY(0px) scale(.995); }
+
+    .tile-ico{
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#ffffff;
+      border:1px solid rgba(0,39,81,.12);
+      flex: 0 0 38px;
+    }
+    .tile-ico img{
+      width:18px;
+      height:18px;
+      object-fit:contain;
       opacity:.95;
     }
-    .row a{
-      color:#12335f;
-      text-decoration:none;
-      font-weight:700;
-      line-height:1.25;
-      word-break:break-word;
-    }
-    .row a:hover{ text-decoration:underline; }
 
-    /* QR + knop */
+    .tile-text{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .tile-title{
+      font-weight:850;
+      color:#0f172a;
+      font-size:13px;
+    }
+    .tile-value{
+      font-weight:750;
+      color:#1e3358;
+      font-size:15px;
+      line-height:1.15;
+    }
+    .tile-sub{
+      font-weight:650;
+      color:#516079;
+      font-size:12px;
+      line-height:1.2;
+    }
+
+    /* ===== Kleine link-acties (afspraak / schade) ===== */
+    .quicklinks{
+      max-width:360px;
+      margin:14px auto 0;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .qlink{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid rgba(0,39,81,.12);
+      background:#fff;
+      box-shadow:0 10px 22px rgba(2,32,71,.05);
+      text-decoration:none;
+      color:#223255;
+      font-weight:800;
+      font-size:12.5px;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+      white-space:nowrap;
+    }
+    .qlink:hover{
+      transform: translateY(-1px);
+      box-shadow:0 14px 28px rgba(2,32,71,.07);
+      border-color: rgba(0,39,81,.18);
+    }
+    .qlink:active{ transform: translateY(0px) scale(.995); }
+
+    .qlink img{
+      width:16px;
+      height:16px;
+      object-fit:contain;
+      opacity:.95;
+    }
+
+    /* ===== QR (blijft in de flow) ===== */
     .bottom-actions{
-      margin-top:14px;
+      margin-top:30px;
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:14px;
+      gap:12px;
       position:relative;
-      z-index:5; /* boven zee */
+      z-index:6;
     }
+
+    .qr-caption{
+      font-size:12px;
+      font-weight:750;
+      color:#5f6d83;
+      text-align:center;
+      line-height:1.25;
+      margin-bottom:-2px;
+    }
+
     #qrcode{
-      width:152px;
-      height:152px;
+      width:152px; height:152px;
       padding:10px;
       background:#fff;
       border-radius:16px;
@@ -142,76 +238,49 @@
       align-items:center;
       justify-content:center;
     }
+
+    /* ===== Contact opslaan knop: ABSOLUUT gepositioneerd (verplaatst zonder kaart groter te maken) ===== */
+.save-wrap{
+  position:absolute;
+  left:48px;
+  right:48px;   /* ⬅ duidelijk compacter */
+  bottom:150px;
+  z-index:7;
+}
+
+
+
+
+
     .btn{
-  width:min(320px, 100%);
-  border:0;
-  cursor:pointer;
-  padding:14px 18px;
-  border-radius:999px;
+      width:100%;
+      border:1px solid rgba(255,255,255,.12);
+      cursor:pointer;
+      padding:14px 18px;
+      border-radius:999px;
+      background: var(--navy);
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.2px;
+      box-shadow: 0 14px 34px rgba(0,39,81,.22);
+      transition: transform .12s ease, filter .12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover{ filter:brightness(1.06); }
+    .btn:active{ transform: translateY(1px) scale(.99); }
 
-  /* NIEUWE KLEUR */
-  background: linear-gradient(
-    180deg,
-    #00356b 0%,
-    #002751 100%
-  );
-
-  color:#fff;
-  font-weight:900;
-  letter-spacing:.2px;
-
-  box-shadow:
-    0 10px 22px rgba(0, 39, 81, .35),
-    inset 0 1px 0 rgba(255,255,255,.08);
-
-  transition: transform .12s ease, filter .12s ease;
-}
-
-.btn:hover{
-  filter: brightness(1.06);
-}
-
-.btn:active{
-  transform: translateY(1px) scale(.99);
-}
-
-
-    /* ====== SEA / WAVES ====== */
+    /* ===== Zee: golven + vuurtoren ===== */
     .sea{
       position:absolute;
       left:0;
       right:0;
-      bottom:-10px;          /* nooit wit onderaan */
+      bottom:-10px;
       height:240px;
       pointer-events:none;
       overflow:hidden;
       z-index:1;
-      background: transparent;  /* JOUW WENS: geen blauw vlak */
+      background: transparent;
     }
-
-    /* ✅ Onderlaag: alleen onderaan (geen "vak"), lost witte transparantie-gaten op */
-.sea::before{
-  content:"";
-  position:absolute;
-  left:-10%;
-  right:-10%;
-  bottom:-30px;
-
-  /* klein houden zodat je nooit waas ziet */
-  height:110px;
-
-  /* vaste waterkleur (geen fade naar boven) */
-  background-color: white;
-
-  /* harde cutoff bovenaan: volledig zichtbaar tot 82%, dan abrupt 0 */
-  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 82%, transparent 82%, transparent 100%);
-  mask-image: linear-gradient(to top, #000 0%, #000 82%, transparent 82%, transparent 100%);
-
-  z-index:0;
-  pointer-events:none;
-}
-
-
 
     .wave-img{
       position:absolute;
@@ -226,39 +295,36 @@
       filter:none;
     }
 
-    /* Animaties */
-    @keyframes bobA {
+    @keyframes bobA{
       0%   { transform: translate3d(-50%, 0px, 0); }
       50%  { transform: translate3d(-50%, -10px, 0); }
       100% { transform: translate3d(-50%, 0px, 0); }
     }
-    @keyframes bobB {
+    @keyframes bobB{
       0%   { transform: translate3d(-50%, 0px, 0); }
       50%  { transform: translate3d(-50%, -6px, 0); }
       100% { transform: translate3d(-50%, 0px, 0); }
     }
-    @keyframes bobC {
+    @keyframes bobC{
       0%   { transform: translate3d(-50%, 0px, 0); }
       50%  { transform: translate3d(-50%, -14px, 0); }
       100% { transform: translate3d(-50%, 0px, 0); }
     }
 
-    /* Overlap zoals je “goede” foto */
-    .w1{ bottom:  6px;  opacity:.55; animation: bobB 6.0s ease-in-out infinite; animation-delay:-2.0s; } /* achter */
+    .w1{ bottom:  6px;  opacity:.55; animation: bobB 6.0s ease-in-out infinite; animation-delay:-2.0s; }
     .w2{ bottom:-6px;  opacity:.65; animation: bobA 5.4s ease-in-out infinite; animation-delay:-1.5s; }
     .w3{ bottom:-20px; opacity:.75; animation: bobB 4.7s ease-in-out infinite; animation-delay:-1.0s; }
     .w4{ bottom:-36px; opacity:.88; animation: bobA 4.0s ease-in-out infinite; animation-delay:-.5s; }
-    .w5{ bottom:-54px; opacity:1.0; animation: bobC 3.6s ease-in-out infinite; } /* voor */
+    .w5{ bottom:-54px; opacity:1.0; animation: bobC 3.6s ease-in-out infinite; }
 
-    /* ====== Vuurtoren (huidige goede versie) ====== */
     .lighthouse{
       position:absolute;
       left:-58px;
       bottom:-46px;
       width:205px;
-      z-index:6; /* voor golven */
-      transform-origin: 45% 90%;
-      animation: lighthouseBob 3.4s ease-in-out infinite;
+      z-index:6;
+      transform-origin:45% 90%;
+      animation:lighthouseBob 3.4s ease-in-out infinite;
       filter: drop-shadow(0 18px 28px rgba(2,32,71,.30));
       will-change: transform;
       backface-visibility:hidden;
@@ -279,8 +345,9 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="top">
-        <div class="brand">
+
+      <div class="topbar">
+        <div class="brand-left">
           <img src="logo.png" alt="baken92 logo">
         </div>
       </div>
@@ -295,34 +362,64 @@
       <div class="role">Verzekeringsagent</div>
       <div class="tagline">Expert ondernemen en schade</div>
 
-      <div class="list">
-        <div class="row">
-          <img class="ico" src="mail.png" alt="">
-          <div><a href="mailto:geert.van.der.wildt@verz.kbc.be">geert.van.der.wildt@verz.kbc.be</a></div>
-        </div>
-        <div class="row">
-          <img class="ico" src="telefoon.png" alt="">
-          <div><a href="tel:+3252397212">052 39 72 12</a></div>
-        </div>
-        <div class="row">
-          <img class="ico" src="locatie.png" alt="">
-          <div>
-            <a target="_blank" rel="noopener" href="https://www.google.com/maps?q=Kerkstraat%2058%20b1%209255%20Buggenhout">
-              Kerkstraat 58 b1<br>9255 Buggenhout
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <img class="ico" src="website.png" alt="">
-          <div><a target="_blank" rel="noopener" href="https://baken92.be/">https://baken92.be/</a></div>
-        </div>
+      <div class="tiles">
+        <a class="tile" href="tel:+3252397212" aria-label="Bel nu">
+          <span class="tile-ico"><img src="telefoon.png" alt=""></span>
+          <span class="tile-text">
+            <span class="tile-title">Bel nu</span>
+            <span class="tile-value">052 39 72 12</span>
+          </span>
+        </a>
+
+        <a class="tile" href="mailto:geert.van.der.wildt@verz.kbc.be" aria-label="Stuur een mail">
+          <span class="tile-ico"><img src="mail.png" alt=""></span>
+          <span class="tile-text">
+            <span class="tile-title">Stuur een mail</span>
+            <span class="tile-sub">geert.van.der.wildt@verz.kbc.be</span>
+          </span>
+        </a>
+
+        <a class="tile"
+           target="_blank" rel="noopener"
+           href="https://www.google.com/maps?q=Kerkstraat%2058%20B1%209255%20Buggenhout"
+           aria-label="Adres openen">
+          <span class="tile-ico"><img src="locatie.png" alt=""></span>
+          <span class="tile-text">
+            <span class="tile-title">Adres</span>
+            <span class="tile-sub">Kerkstraat 58 B1<br>9255 Buggenhout</span>
+          </span>
+        </a>
       </div>
 
+      <div class="quicklinks">
+        <a class="qlink"
+           href="https://www.kbc.be/particulieren/nl/proces/afspraak-maken-agent.html?porcode=0JOX#/glofe/appointment/subject"
+           target="_blank" rel="noopener">
+          <img src="afspraak.pmg" alt=""
+               onerror="this.onerror=null;this.src='afspraak.png';">
+          Maak een afspraak
+        </a>
+
+        <a class="qlink"
+           href="https://baken92.be/schade-aangeven/"
+           target="_blank" rel="noopener">
+          <img src="schade.png" alt="">
+          Schade aangeven
+        </a>
+      </div>
+
+      <!-- QR blijft waar hij stond -->
       <div class="bottom-actions">
+        <div class="qr-caption">Scan de QR-code om deze gegevens te delen</div>
         <div id="qrcode" aria-label="QR code naar website"></div>
+      </div>
+
+      <!-- Knop: alleen deze schuift naar beneden (zonder kaart groter te maken) -->
+      <div class="save-wrap">
         <button class="btn" id="saveContact">contact opslaan</button>
       </div>
 
+      <!-- Zee onderaan -->
       <div class="sea" aria-hidden="true">
         <img class="lighthouse" src="vuurtoren.png" alt="">
         <img class="wave-img w1" src="golf5.png" alt="">
@@ -331,6 +428,7 @@
         <img class="wave-img w4" src="golf2.png" alt="">
         <img class="wave-img w5" src="golf1.png" alt="">
       </div>
+
     </div>
   </div>
 
@@ -344,7 +442,7 @@
       phone: "+32 52 39 72 12",
       email: "geert.van.der.wildt@verz.kbc.be",
       website: "https://baken92.be/",
-      addressLabel: "Kerkstraat 58 b1, 9255 Buggenhout, België"
+      addressLabel: "Kerkstraat 58 B1, 9255 Buggenhout, België"
     };
 
     new QRCode(document.getElementById("qrcode"), {
@@ -356,7 +454,8 @@
 
     function makeVCard(c){
       const lines = [
-        "BEGIN:VCARD","VERSION:3.0",
+        "BEGIN:VCARD",
+        "VERSION:3.0",
         `N:${c.lastName};${c.firstName};;;`,
         `FN:${c.firstName} ${c.lastName}`,
         c.org ? `ORG:${c.org}` : "",
@@ -374,12 +473,14 @@
       const vcf = makeVCard(CONTACT);
       const blob = new Blob([vcf], { type: "text/vcard;charset=utf-8" });
       const url = URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
       a.download = `${CONTACT.firstName}_${CONTACT.lastName}.vcf`.replace(/\s+/g, "_");
       document.body.appendChild(a);
       a.click();
       a.remove();
+
       URL.revokeObjectURL(url);
     });
   </script>
